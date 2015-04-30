@@ -39,6 +39,7 @@
 		</div>
         <div id="won-game" ng-cloak ng-show="vm.litCount === 0">
         	<p>You've won!</p>
+        	<p>It only took {{vm.moves.length}} moves.</p>
         	<button ng-click="vm.createBoard()">Try Again</button>
         </div>
 	</div>
