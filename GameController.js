@@ -49,10 +49,7 @@
 
 			// if we turned on any squares we know we haven't won yet
 			// otherwise double-check the board to see if any others are still on
-			if (shortCut) {
-				vm.won = false;
-			} 
-			else {
+			if (!shortCut) {
 				vm.checkBoard();
 			}
 		}
@@ -62,7 +59,7 @@
 			for (var i = 0; i < vm.board.length; i++) {
 				for (var j = 0; j < vm.board.length; j++) {
 					if (vm.board[i][j] === true) {
-						vm.won = false;
+						return;
 					}
 				}
 			}

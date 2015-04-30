@@ -3,8 +3,9 @@
 <title>Lights Out!</title>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-route.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link rel="stylesheet" href="/LightsOut/LightsOut.css"
+<link rel="stylesheet" href="LightsOut.css"
 </head>
 <body>
 	<div ng-app="lightsout" 
@@ -30,6 +31,9 @@
 				</div>
 			</div>
 		</div>
+        <div id="won-game" ng-show="vm.won">
+        	You've won!
+        </div>
 	</div>
 	<script type="text/javascript" src="LightsOut.js"></script>
 	<script type="text/javascript" src="BoardService.js"></script>
