@@ -13,11 +13,16 @@
 		vm.won = false;
 
 		vm.boardSizes = boardService.getPresetBoardSizes();
+
+		// initial selection of board size is just the first one in the preset board size array
 		vm.selectedBoardSize = vm.boardSizes[0];
 
 		vm.updateBoard = _updateBoard;
 		vm.checkBoard = _checkBoard;
 		vm.createBoard = _createBoard;
+
+		// initial board creation
+		vm.createBoard();
 
 		function _updateBoard(x, y) {
 			// indicates if we can short cut to not winning
@@ -69,6 +74,8 @@
 
 		function _createBoard() {
 			// set up a temp array and then swap it into the view model
+			vm.won = false;
+
 			var tempboard = [];
 			for (var i = 0; i < vm.selectedBoardSize.length; i++)
 			{
@@ -89,7 +96,5 @@
 			vm.updateBoard(centerX, centerY);
 			vm.board[centerY][centerX] = false;
 		}
-
-		vm.createBoard();
 	}
 })();

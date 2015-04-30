@@ -22,7 +22,10 @@
 						ng-change="vm.createBoard()"><select>
 			</div>
 		</div>
-		<div id="gameboard" class="row" ng-class="{ 'large': vm.board[0].length < 21, 'medium': vm.board[0].length === 21, 'small' : vm.board[0].length > 21 }">
+		<div id="gameboard" 
+			class="row" 
+			ng-class="{ 'large': vm.board[0].length < 21, 'medium': vm.board[0].length === 21, 'small' : vm.board[0].length > 21 }"
+			ng-show="!vm.won">
 			<div ng-repeat="row in vm.board track by $index">
 				<div ng-repeat="cell in row track by $index" 
 					class="cell" 
@@ -32,7 +35,8 @@
 			</div>
 		</div>
         <div id="won-game" ng-show="vm.won">
-        	You've won!
+        	<p>You've won!</p>
+        	<button ng-click="vm.createBoard()">Try Again</button>
         </div>
 	</div>
 	<script type="text/javascript" src="LightsOut.js"></script>
