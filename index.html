@@ -25,7 +25,7 @@
 		<div id="gameboard" 
 			class="row" 
 			ng-class="{ 'large': vm.board[0].length < 21, 'medium': vm.board[0].length === 21, 'small' : vm.board[0].length > 21 }"
-			ng-show="!vm.won">
+			ng-show="!(vm.litCount === 0)">
 			<div ng-repeat="row in vm.board track by $index">
 				<div ng-repeat="cell in row track by $index" 
 					class="cell" 
@@ -33,8 +33,11 @@
 					ng-class="{ 'lit' : cell, 'large': vm.board[0].length < 21, 'medium': vm.board[0].length === 21, 'small' : vm.board[0].length > 21 }">
 				</div>
 			</div>
+			<div ng-cloak class="col-md-12 text-center">
+				Moves: {{vm.moves.length}}
+			</div>
 		</div>
-        <div id="won-game" ng-show="vm.won">
+        <div id="won-game" ng-cloak ng-show="vm.litCount === 0">
         	<p>You've won!</p>
         	<button ng-click="vm.createBoard()">Try Again</button>
         </div>
