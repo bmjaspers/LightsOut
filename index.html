@@ -34,7 +34,11 @@
 			</div>
 			<div ng-cloak class="col-md-12 text-center">
 				Moves: {{vm.moves.length}}
+				<div ng-cloak class="text-center" ng-show="vm.isReplaying">
+					<button ng-click="vm.changeReplaySpeed(1)">&lt;&lt;</button>&nbsp;&nbsp;<button ng-click="vm.changeReplaySpeed(-1)">&gt;&gt;</button>
+				</div>
 			</div>
+
 		</div>
         <div id="won-game" ng-cloak ng-show="vm.isWon">
         	<p>You've won!</p>

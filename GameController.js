@@ -8,10 +8,14 @@
 
 	function gameController($scope, $interval, boardService) {
 		var vm = this;
+		var _replayInterval = {};
 
 		vm.board = [];
 		vm.moves = [];
+		vm.replayMoves = [];
 		vm.isWon = false;
+		vm.isReplaying = false;
+		vm.speedFactor = 4;
 
 		vm.boardSizes = boardService.getPresetBoardSizes();
 
@@ -19,6 +23,7 @@
 		vm.selectedBoardSize = vm.boardSizes[0];
 
 		vm.replay = _replay;
+		vm.changeReplaySpeed = _changeReplaySpeed;
 		vm.updateBoard = _updateBoard;
 		vm.createBoard = _createBoard;
 
@@ -26,28 +31,53 @@
 		vm.createBoard();
 
 		function _replay() {
-			var moves = vm.moves;
+			vm.replayMoves = vm.moves;
 			
 			var i = -1;
-			var delay = 1000;
 
 			vm.board = boardService.createBoard(vm.selectedBoardSize);
 			vm.isWon = false;
 			vm.moves = [];
+			vm.isReplaying = true;
 
-			$interval(function() {
-					// delays updating the board for one round
-					if (i >= 0)	{ vm.updateBoard(moves[i].x, moves[i].y); }
-					i++;
+			_createReplayInterval();
+		}
+
+		function _createReplayInterval() {
+			var delay = 250;
+
+			if (_replayInterval) { $interval.cancel(_replayInterval); }
+
+			console.log("Replay speed: " + delay * vm.speedFactor);
+
+			_replayInterval = $interval(function() {
+					var move = vm.replayMoves.splice(0, 1)[0];
+					vm.updateBoard(move.x, move.y);
 				},
-				delay,
-				moves.length + 1
-			);
+				delay * vm.speedFactor,
+				vm.replayMoves.length
+			);			
+		}
+
+		function _changeReplaySpeed(inc) {
+			var newFactor = vm.speedFactor + inc;
+
+			if (newFactor < 1) newFactor = 1;
+			if (newFactor > 4) newFactor = 4;
+
+			if (newFactor != vm.speedFactor) {
+				vm.speedFactor = newFactor;
+				_createReplayInterval();
+			}
 		}
 
 		function _updateBoard(x, y) {
 			vm.moves.push({ x: x, y: y});
 			vm.isWon = boardService.updateBoard(x, y);
+
+			if (vm.isWon && vm.isReplaying) {
+				vm.isReplaying = false;
+			}
 		}
 
 		function _createBoard() {		
