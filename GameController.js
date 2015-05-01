@@ -47,13 +47,13 @@
 
 		function _updateBoard(x, y) {
 			vm.moves.push({ x: x, y: y});
-
 			vm.isWon = boardService.updateBoard(x, y);
 		}
 
-		function _createBoard() {
-			vm.moves = [];
+		function _createBoard() {		
 			vm.board = boardService.createBoard(vm.selectedBoardSize);
+			vm.isWon = false;
+			vm.moves = [];
 		}
 	}
 })();
