@@ -4,80 +4,56 @@
 	angular.module("lightsout")
 		.controller("gameController", gameController);
 
-	gameController.$inject = ["boardService"];
+	gameController.$inject = ["$scope", "$interval", "boardService"];
 
-	function gameController(boardService) {
+	function gameController($scope, $interval, boardService) {
 		var vm = this;
 
 		vm.board = [];
 		vm.moves = [];
-		vm.litCount = 1;
+		vm.isWon = false;
 
 		vm.boardSizes = boardService.getPresetBoardSizes();
 
 		// initial selection of board size is just the first one in the preset board size array
 		vm.selectedBoardSize = vm.boardSizes[0];
 
+		vm.replay = _replay;
 		vm.updateBoard = _updateBoard;
 		vm.createBoard = _createBoard;
 
 		// initial board creation
 		vm.createBoard();
 
+		function _replay() {
+			var moves = vm.moves;
+			
+			var i = -1;
+			var delay = 1000;
+
+			vm.board = boardService.createBoard(vm.selectedBoardSize);
+			vm.isWon = false;
+			vm.moves = [];
+
+			$interval(function() {
+					// delays updating the board for one round
+					if (i >= 0)	{ vm.updateBoard(moves[i].x, moves[i].y); }
+					i++;
+				},
+				delay,
+				moves.length + 1
+			);
+		}
+
 		function _updateBoard(x, y) {
 			vm.moves.push({ x: x, y: y});
 
-			vm.board[y][x] = !vm.board[y][x];
-			vm.litCount += vm.board[y][x] ? 1 : -1;
-
-			// this could probably be functionalized, but wouldn't gain much by it currently
-			if (y + 1 < vm.board.length) {
-				vm.board[y + 1][x] = !(vm.board[y + 1][x]);
-				vm.litCount += vm.board[y + 1][x] ? 1 : -1;
-			} 
-
-			if (y - 1 >= 0) {
-				vm.board[y - 1][x] = !(vm.board[y - 1][x]);
-				vm.litCount +=  vm.board[y - 1][x] ? 1 : -1;
-			}
-
-			if (x + 1 < vm.board[x].length) {
-				vm.board[y][x + 1] = !(vm.board[y][x + 1]);
-				vm.litCount += vm.board[y][x + 1] ? 1 : -1;
-			}
-
-			if (x - 1 >= 0) {
-				vm.board[y][x - 1] = !(vm.board[y][x - 1]);
-				vm.litCount += vm.board[y][x - 1] ? 1 : -1;
-			}
+			vm.isWon = boardService.updateBoard(x, y);
 		}
 
 		function _createBoard() {
-			// set up a temp array and then swap it into the view model
-			vm.litCount = 1;
-
-			var tempboard = [];
-			for (var i = 0; i < vm.selectedBoardSize.length; i++)
-			{
-				tempboard[i] = [];
-
-				for (var j = 0; j < vm.selectedBoardSize.width; j++)
-				{
-					tempboard[i].push(false);
-				}
-			}
-
-			vm.board = tempboard;
-
-			var centerY = Math.floor(vm.selectedBoardSize.length / 2);
-			var centerX = Math.floor(vm.selectedBoardSize.width / 2)
-
-			// "press" the center square and then mark the center square itself as false
-			vm.updateBoard(centerX, centerY);
-			vm.board[centerY][centerX] = false;
-
-			vm.litCount = vm.litCount - 2;
 			vm.moves = [];
+			vm.board = boardService.createBoard(vm.selectedBoardSize);
 		}
 	}
 })();
